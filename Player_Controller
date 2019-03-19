@@ -1,0 +1,67 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayerController : MonoBehaviour {
+
+    [Header("移動水平分量")]
+    public float x;
+
+    [Header("移動垂直分量")]
+    public float y;
+
+    [Header("角色受力")]
+    public float p;
+
+    [Header("鋼體")]
+    public Rigidbody2D rb;
+
+    [Header("記分板")]
+    public Text ScoreCount;
+
+    [Header("勝利訊息")]
+    public Text VictoryMessage;
+
+    int Score;
+
+    // Use this for initialization
+    void Start () {
+        p = 2;
+        Score = 0;
+        rb = GetComponent<Rigidbody2D>();
+        VictoryMessage.text = "";
+        SetScore();
+	}
+	
+	// Update is called once per frame
+    void Update()
+    {
+        x = Input.GetAxis("Horizontal");
+        y = Input.GetAxis("Vertical");
+        Vector2 move = new Vector2( x , y );
+        rb.AddForce( p*move );
+        SetScore();
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.CompareTag("PickUp"))
+        {
+            other.gameObject.SetActive(false);
+            Score += 1;
+            
+        }
+    }
+
+    void SetScore()
+    {
+        ScoreCount.text = "Score ： " + Score.ToString() + " / 8";//ToString >> 轉換成字串
+        if(Score >= 8)
+        {
+            VictoryMessage.text = "> > >)} CONGRATULATION {(< < <";
+        }
+    }
+
+}
+
